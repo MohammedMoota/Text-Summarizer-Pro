@@ -6,7 +6,7 @@
 
 **Text Summarizer Pro** is a powerful, locally-hosted web application that uses advanced NLP and OCR technologies to summarize text from various sources including raw text, PDF documents, and images.
 
-## 🚀 Key Features
+##  Key Features
 
 *   **Hybrid Summarization Engine**:
     *   **LSA (Latent Semantic Analysis)** for structured text and PDFs.
@@ -21,14 +21,14 @@
     *   Drag-and-drop file support.
 *   **Privacy-First**: All processing happens locally on your machine. No data is sent to external clouds.
 
-## 🛠️ Tech Stack
+##  Tech Stack
 
 *   **Backend**: Flask (Python)
 *   **NLP**: Sumy, NLTK, TextBlob
 *   **OCR**: Tesseract, Pillow (PIL), pdfplumber
 *   **Frontend**: HTML5, CSS3 (Custom Dark Theme), Vanilla JS
 
-## 📦 Installation
+##  Installation
 
 1.  **Clone the repository**:
     ```bash
@@ -51,7 +51,7 @@
     nltk.download('punkt')
     ```
 
-##  ▶️ Usage
+##   Usage
 
 1.  **Start the Application**:
     ```bash
@@ -66,8 +66,8 @@
     *   **PDF**: Upload a digital PDF document.
     *   **Image**: Upload a screenshot or scanned image (OCR will activate).
 
-## 🔒 Security Note
+##  Security Note
 This application is designed for local use. The `SECRET_KEY` in `app.py` should be changed via environment variables if deploying to a public server.
 
-## 📄 License
+##  License
 This project is open source and available under the [MIT License](LICENSE).
