@@ -1,0 +1,29 @@
+# Text Summarizer Pro - Dependencies
+# Professional Edition v2
+
+# Core Framework
+flask>=2.0.0
+Werkzeug>=2.0.0
+
+# NLP & Text Processing
+nltk>=3.8
+textblob>=0.17.0
+
+# Semantic Summarization (LSA - not TF-IDF)
+sumy>=0.11.0
+
+# OCR Engine (Fast & Accurate)
+easyocr>=1.7.0
+
+# PDF Processing
+pdfplumber>=0.10.0
+
+# Image Processing
+Pillow>=9.0.0
+
+# PyTorch (required by EasyOCR - CPU version for speed)
+torch
+torchvision
+
+# Additional NLP
+numpy>=1.21.0

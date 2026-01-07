@@ -1,0 +1,388 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+    /* === MINIMALIST DARK THEME (Overrides) === */
+    :root {
+        --bg-main: #050505;
+        --bg-card: #111111;
+        --border-color: #333;
+        --accent-color: #3b82f6; /* Electric Blue */
+        --text-color: #ffffff;
+        --text-muted: #888888;
+    }
+
+    /* Force override body background */
+    body {
+        background-color: var(--bg-main) !important;
+        color: var(--text-color) !important;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    /* Hide default navbar/footer for cleaner look if requested, 
+       but for now we style them to blend in */
+    nav {
+        box-shadow: none !important;
+        background: transparent !important;
+        border-bottom: 1px solid var(--border-color);
+    }
+    .brand-logo {
+        color: var(--text-color) !important;
+        font-weight: 700;
+        background: none !important;
+        -webkit-text-fill-color: initial !important; 
+    }
+
+    /* Layout */
+    .container {
+        width: 100%;
+        max-width: 900px !important;
+        margin-top: 40px;
+    }
+
+    /* Main Interface Card */
+    .app-interface {
+        background: var(--bg-card);
+        border: 1px solid var(--border-color);
+        border-radius: 16px;
+        padding: 40px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
+
+    .app-header {
+        text-align: center;
+        margin-bottom: 40px;
+    }
+    .app-header h1 {
+        font-size: 2.5rem;
+        margin: 0 0 10px 0;
+        font-weight: 800;
+        letter-spacing: -1px;
+    }
+    .app-header p {
+        color: var(--text-muted);
+        font-size: 1.1rem;
+        margin: 0;
+    }
+
+    /* Custom Switcher (Tabs) */
+    .mode-switcher {
+        display: flex;
+        justify-content: center;
+        background: rgba(255,255,255,0.05);
+        border-radius: 12px;
+        padding: 5px;
+        width: fit-content;
+        margin: 0 auto 30px auto;
+    }
+    
+    .mode-btn {
+        background: transparent;
+        border: none;
+        color: var(--text-muted);
+        padding: 10px 25px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 600;
+        font-size: 0.95rem;
+        transition: all 0.2s ease;
+    }
+    
+    .mode-btn:hover {
+        color: white;
+    }
+    
+    .mode-btn.active {
+        background: var(--accent-color);
+        color: white;
+        box-shadow: 0 2px 10px rgba(59, 130, 246, 0.3);
+    }
+
+    /* Inputs */
+    .input-view {
+        display: none;
+        animation: fadeEffect 0.3s ease;
+    }
+    .input-view.active {
+        display: block;
+    }
+
+    /* Textarea */
+    textarea.clean-textarea {
+        width: 100%;
+        height: 250px;
+        background: #000;
+        border: 1px solid var(--border-color);
+        border-radius: 12px;
+        padding: 20px;
+        color: white;
+        font-size: 1rem;
+        line-height: 1.6;
+        resize: vertical;
+        box-sizing: border-box;
+    }
+    textarea.clean-textarea:focus {
+        outline: none;
+        border-color: var(--accent-color);
+    }
+
+    /* Drop Zone */
+    .drop-box {
+        border: 2px dashed var(--border-color);
+        border-radius: 12px;
+        padding: 60px 20px;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.2s;
+        background: rgba(255,255,255,0.02);
+    }
+    .drop-box:hover {
+        border-color: var(--accent-color);
+        background: rgba(59, 130, 246, 0.05);
+    }
+    .drop-box i {
+        font-size: 2.5rem;
+        color: var(--text-muted);
+        margin-bottom: 15px;
+        display: block;
+    }
+    .drop-box h3 {
+        margin: 0;
+        font-size: 1.2rem;
+        color: white;
+    }
+    .drop-box p {
+        color: var(--text-muted);
+        margin-top: 5px;
+    }
+    .file-status {
+        margin-top: 15px;
+        color: var(--accent-color);
+        font-weight: 600;
+    }
+
+    /* Controls */
+    .control-bar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-top: 30px;
+        border-top: 1px solid var(--border-color);
+        padding-top: 30px;
+        gap: 20px;
+        flex-wrap: wrap;
+    }
+    
+    .slider-group {
+        flex: 1;
+        min-width: 200px;
+    }
+    
+    .submit-btn {
+        background: var(--accent-color);
+        color: white;
+        border: none;
+        padding: 15px 35px;
+        border-radius: 50px;
+        font-weight: 700;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .submit-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(59, 130, 246, 0.4);
+    }
+    .submit-btn:disabled {
+        background: var(--border-color);
+        cursor: wait;
+        transform: none;
+    }
+
+    input[type=range] {
+        border: none;
+        background: transparent;
+        width: 100%;
+    }
+
+    /* Results */
+    .summary-result {
+        margin-top: 50px;
+        background: #000;
+        border: 1px solid var(--border-color);
+        border-radius: 12px;
+        overflow: hidden;
+    }
+    .summary-header {
+        background: rgba(255,255,255,0.03);
+        padding: 15px 25px;
+        border-bottom: 1px solid var(--border-color);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .summary-body {
+        padding: 30px;
+        font-size: 1.1rem;
+        line-height: 1.8;
+        color: #ddd;
+    }
+    
+    .badge {
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        padding: 4px 8px;
+        border-radius: 4px;
+        background: #222;
+        color: #aaa;
+        letter-spacing: 0.5px;
+    }
+
+    @keyframes fadeEffect {
+        from {opacity: 0; transform: translateY(10px);}
+        to {opacity: 1; transform: translateY(0);}
+    }
+</style>
+
+<div class="container">
+    <div class="app-interface">
+        
+        <div class="app-header">
+            <h1>Text Summarizer Pro</h1>
+            <p>Intelligent Analysis & Summarization</p>
+        </div>
+
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <div style="background: rgba(239, 68, 68, 0.1); border: 1px solid #ef4444; color: #ef4444; padding: 15px; border-radius: 8px; margin-bottom: 30px;">
+                {% for message in messages %}
+                   <div><i class="fas fa-exclamation-triangle"></i> {{ message }}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
+        {% endwith %}
+
+        <!-- Mode Switcher -->
+        <div class="mode-switcher">
+            <button type="button" class="mode-btn active" data-mode="text" onclick="setMode('text')">Text</button>
+            <button type="button" class="mode-btn" data-mode="pdf" onclick="setMode('pdf')">PDF Document</button>
+            <button type="button" class="mode-btn" data-mode="image" onclick="setMode('image')">Image / OCR</button>
+        </div>
+
+        <form method="POST" action="/summarize" id="mainForm" enctype="multipart/form-data">
+            <input type="hidden" id="input_type" name="input_type" value="text">
+
+            <!-- TEXT VIEW -->
+            <div id="view-text" class="input-view active">
+                <textarea name="input_text" class="clean-textarea" placeholder="Enter your text here...">{% if source == 'text' and original_text %}{{ original_text }}{% endif %}</textarea>
+            </div>
+
+            <!-- PDF VIEW -->
+            <div id="view-pdf" class="input-view">
+                <div class="drop-box" onclick="document.getElementById('pdf-input').click()">
+                    <i class="fas fa-file-pdf"></i>
+                    <h3>Select PDF Document</h3>
+                    <p>Click here to upload</p>
+                    <div id="pdf-feedback" class="file-status"></div>
+                </div>
+                <input type="file" id="pdf-input" name="pdf_file" accept=".pdf" hidden onchange="updateFileName(this, 'pdf-feedback')">
+            </div>
+
+            <!-- IMAGE VIEW -->
+            <div id="view-image" class="input-view">
+                <div class="drop-box" onclick="document.getElementById('img-input').click()">
+                    <i class="fas fa-camera"></i>
+                    <h3>Select Image</h3>
+                    <p>JPG, PNG, Screenshot</p>
+                    <div id="img-feedback" class="file-status"></div>
+                </div>
+                <!-- Correct Name: pdf_file (backend requirement) -->
+                <input type="file" id="img-input" name="pdf_file" accept="image/*,.pdf" hidden onchange="updateFileName(this, 'img-feedback')">
+            </div>
+
+            <!-- Action Bar -->
+            <div class="control-bar">
+                <div class="slider-group">
+                    <label style="color:#aaa; font-size:0.9rem; margin-bottom:10px; display:block;">
+                        Summary Length: <span id="len-display" style="color:white; font-weight:bold;">{{ num_sentences|default(3) }}</span> sentences
+                    </label>
+                    <input type="range" name="num_sentences" min="1" max="10" value="{{ num_sentences|default(3) }}" 
+                           oninput="document.getElementById('len-display').innerText = this.value">
+                </div>
+                
+                <button type="submit" class="submit-btn" id="runBtn">
+                    GENERATE SUMMARY
+                </button>
+            </div>
+
+            <!-- Loading Indicator -->
+            <div id="loading" style="display:none; text-align:center; margin-top:20px;">
+                <div style="color: var(--accent-color); font-weight:600;">Processing... Please wait.</div>
+            </div>
+        </form>
+
+        <!-- RESULTS -->
+        {% if summary %}
+        <div class="summary-result">
+            <div class="summary-header">
+                <div style="font-weight:600; color:white;">Result</div>
+                <div>
+                    <span class="badge" style="margin-right:10px;">{{ summary_word_count }} Words</span>
+                    <span class="badge" style="color: {% if 'Positive' in summary_sentiment %}#10b981{% elif 'Negative' in summary_sentiment %}#ef4444{% else %}#aaa{% endif %};">
+                        {{ summary_sentiment }}
+                    </span>
+                </div>
+            </div>
+            <div class="summary-body">
+                {{ summary }}
+            </div>
+        </div>
+        <div style="margin-top:20px; text-align:center;">
+            <a href="/" style="color: #666; text-decoration:none; font-size:0.9rem;">Start Over</a>
+        </div>
+        {% endif %}
+
+    </div>
+</div>
+
+<script>
+    // Tab Switching Logic
+    function setMode(mode) {
+        // Update hidden input
+        document.getElementById('input_type').value = mode;
+        
+        // Update Buttons
+        document.querySelectorAll('.mode-btn').forEach(btn => {
+            if(btn.dataset.mode === mode) btn.classList.add('active');
+            else btn.classList.remove('active');
+        });
+        
+        // Update Views
+        document.querySelectorAll('.input-view').forEach(view => view.classList.remove('active'));
+        document.getElementById('view-' + mode).classList.add('active');
+    }
+
+    // File Name Update
+    function updateFileName(input, elementId) {
+        if(input.files && input.files.length > 0) {
+            document.getElementById(elementId).innerText = input.files[0].name;
+            document.getElementById(elementId).style.display = 'block';
+        }
+    }
+
+    // Form Submission
+    document.getElementById('mainForm').addEventListener('submit', function() {
+        document.getElementById('runBtn').disabled = true;
+        document.getElementById('runBtn').innerText = '...';
+        document.getElementById('loading').style.display = 'block';
+    });
+
+    // Initialize View based on server return (persists state)
+    window.addEventListener('load', function() {
+        {% if source %}
+            setMode('{{ source }}');
+        {% endif %}
+    });
+</script>
+{% endblock %}
